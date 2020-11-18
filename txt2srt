@@ -1,0 +1,45 @@
+#!/usr/bin/perl
+
+open(F, $ARGV[0]);
+$cnt=1;
+print chr(255).chr(254);
+
+while(defined($s=<F>)) {
+  chomp($s);
+  $c=substr($s, 0, 1);
+  if (($c ge "0")&&($c le "9")) {
+    $starttime="";
+    $stoptime="";
+    do {
+      $c=substr($s, 0, 1);
+      substr($s, 0, 1)="";
+      $starttime.=$c;
+    } while ((($c ge "0")&&($c le "9"))||($c eq "."));
+    if ($c eq "-") {
+      do {
+        $c=substr($s, 0, 1);
+        substr($s, 0, 1)="";
+        $stoptime.=$c;
+      } while ((($c ge "0")&&($c le "9"))||($c eq "."));
+    } else {
+      $stoptime=$starttime+2;
+    }
+    $c_starttime=cvt($starttime);
+    $c_stoptime=cvt($stoptime);
+    print "$cnt\n$c_starttime --> $c_stoptime\n$s\n\n";
+    $cnt++;
+  }
+}
+
+sub cvt {
+  local($time)=@_[0];
+  local($h, $m, $s);
+  local($t_int, $t_real)=split("[.]", $time);
+  $h=int($t_int/3600);
+  $t_int=$t_int%3600;
+  $m=int($t_int/60);
+  $s=int($t_int%60);
+  $r=$t_real*100;
+  $s=sprintf("%02d:%02d:%02d,%03d", $h, $m, $s, $r);
+  
+}
